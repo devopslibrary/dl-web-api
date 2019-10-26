@@ -16,6 +16,7 @@ async function getManagementApiToken() {
   let result = await request(options, function (error, response, body) {
     if (error) throw new Error(error);
   });
+
   return JSON.parse(result).access_token;
 }
 

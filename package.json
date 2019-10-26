@@ -4,7 +4,7 @@
   "description": "Backend for Kondo app",
   "main": "app.js",
   "scripts": {
-    "serve": "backpack dev"
+    "serve": "backpack dev | pino-pretty -i req,res"
   },
   "author": "DevOps Library",
   "license": "ISC",
@@ -14,7 +14,10 @@
     "express": "^4.17.1",
     "express-jwt": "^5.3.1",
     "express-jwt-authz": "^2.3.1",
+    "express-pino-logger": "^4.0.0",
+    "express-session": "^1.17.0",
     "jwks-rsa": "^1.6.0",
+    "request": "^2.88.0",
     "request-promise": "^4.2.4"
   }
 }
