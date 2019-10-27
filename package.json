@@ -4,12 +4,16 @@
   "description": "Backend for Kondo app",
   "main": "app.js",
   "scripts": {
-    "serve": "backpack dev | pino-pretty -i req,res"
+    "serve": "yarn && backpack dev | pino-pretty -i req,res",
+    "pretest": "eslint --ignore-path .gitignore .",
+    "test": "jest"
   },
   "author": "DevOps Library",
   "license": "ISC",
   "dependencies": {
+    "async-redis": "^1.1.7",
     "backpack-core": "^0.8.4",
+    "connect-redis": "^4.0.3",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-jwt": "^5.3.1",
@@ -17,7 +21,29 @@
     "express-pino-logger": "^4.0.0",
     "express-session": "^1.17.0",
     "jwks-rsa": "^1.6.0",
+    "jwt-decode": "^2.2.0",
+    "prettier": "^1.18.2",
+    "redis": "^2.8.0",
+    "redis-rejson": "^1.0.0",
     "request": "^2.88.0",
     "request-promise": "^4.2.4"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "**/*.js"
+    ],
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/coverage/",
+      "backpack.config.js"
+    ]
+  },
+  "devDependencies": {
+    "eslint": "^6.6.0",
+    "eslint-config-prettier": "^6.5.0",
+    "jest": "^24.9.0",
+    "supertest": "^4.0.2"
   }
 }
