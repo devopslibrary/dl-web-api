@@ -22,6 +22,7 @@
     "express-session": "^1.17.0",
     "jwks-rsa": "^1.6.0",
     "jwt-decode": "^2.2.0",
+    "pino-pretty": "^3.2.2",
     "prettier": "^1.18.2",
     "redis": "^2.8.0",
     "redis-rejson": "^1.0.0",

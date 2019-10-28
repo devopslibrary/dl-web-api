@@ -1,7 +1,6 @@
 const express = require("express");
 const jwt = require("express-jwt");
 const jwksRsa = require("jwks-rsa");
-const pino = require("express-pino-logger")();
 const getGithubUserOrgs = require("./library/githubUser/getGithubUserOrgs");
 const getGithubUser = require("./library/githubUser/getGithubUser");
 const managementApiToken = require("./library/auth0/getManagementApiToken");
@@ -12,6 +11,13 @@ let redisClient = redis.createClient();
 
 // Create a new Express app
 const app = express();
+
+// Logging
+const pino = require("pino");
+const expressPino = require("express-pino-logger");
+const logger = pino({ level: process.env.LOG_LEVEL || "info" });
+const expressLogger = expressPino({ logger });
+app.use(expressLogger);
 
 // Set up Auth0 configuration
 const authConfig = {
@@ -49,30 +55,27 @@ if (app.get("env") === "production") {
 app.use(session(sess));
 // End session code
 
-// Add Logger (Pino)
-app.use(pino);
-
 // Get management token from Auth0
 let authToken;
 app.use(express.json());
 app.listen(3001, async function() {
-  console.log("App is ready");
+  logger.info("App is ready");
   await managementApiToken.token.then(function(token) {
     authToken = token;
   });
 });
 
 // Define an endpoint that must be called with an access token
-app.get("/api/external", checkJwt, (req, res) => {
-  const userId = req.user.sub.split("|")[1];
-  getGithubUser(authToken, userId).then(function(user) {
-    const githubToken = user.identities[0].access_token;
-    getGithubUserOrgs(githubToken).then(function(orgs) {
-      res.send({
-        orgs
-      });
-    });
-  });
+app.get("/api/external", checkJwt, async (req, res) => {
+  if (!req.session.orgs) {
+    const userId = req.user.sub.split("|")[1];
+    const githubUser = await getGithubUser(authToken, userId);
+    const githubToken = githubUser.identities[0].access_token;
+    const orgs = await getGithubUserOrgs(githubToken);
+    req.session.orgs = orgs;
+  }
+  req.log.info("Returning cached Github Orgs");
+  res.send(req.session.orgs);
 });
 
 process.on("SIGINT", function() {
