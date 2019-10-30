@@ -1,13 +1,11 @@
-const getGithubUserOrgs = require("./getGithubUserOrgs");
-const getGithubUser = require("./getGithubUser");
+const getUserOrgs = require("./getUserOrgs");
+const getUser = require("./getUser");
 const getManagementApiToken = require("../auth0/getManagementApiToken");
 
 test("Given a user, should return all orgs both private and public that they are a part of", async () => {
   const authToken = await getManagementApiToken.token;
-  const githubUser = await getGithubUser(authToken, "5382669");
-  const githubOrgs = await getGithubUserOrgs(
-    githubUser.identities[0].access_token
-  );
+  const githubUser = await getUser(authToken, "5382669");
+  const githubOrgs = await getUserOrgs(githubUser.identities[0].access_token);
 
   expect(githubOrgs[0]).toHaveProperty("id");
   expect(githubOrgs[0]).toHaveProperty("login");

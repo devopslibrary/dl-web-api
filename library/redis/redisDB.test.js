@@ -1,6 +1,6 @@
 const redisDB = require("./redisDB");
 
 test("Should be able to talk to Redis properly", async () => {
-  const output = await redisDB.hget("ghorg:4631459", "id");
-  expect(output).toEqual("4631459");
+  const output = await redisDB.hget("ghorg:11233903", "app_id");
+  expect(output).toEqual("30108");
 });

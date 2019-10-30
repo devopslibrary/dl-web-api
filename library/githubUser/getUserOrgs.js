@@ -35,9 +35,9 @@ function getRedisData(orgs) {
   );
 }
 
-async function getGithubUserOrgs(githubToken) {
+async function getUserOrgs(githubToken) {
   const userOrgInfo = await getAllGithubUserOrgs(githubToken);
   return await getRedisData(userOrgInfo);
 }
 
-module.exports = getGithubUserOrgs;
+module.exports = getUserOrgs;
