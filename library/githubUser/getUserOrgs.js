@@ -1,8 +1,11 @@
 const request = require("request-promise");
-const redisDB = require("../redis/redisDB");
+const graphqlRequest = require('graphql-request').request
+const {readFileSync} = require('fs')
+require('dotenv').config()
 
 // Returns all orgs that a user belongs to (provided they allow us to get that info!)
-async function getAllGithubUserOrgs(githubToken) {
+async function getUserOrgs(githubToken) {
+  // Retrieve Orgs from Github
   let options = {
     method: "GET",
     url: "https://api.github.com/user/orgs",
@@ -15,15 +18,17 @@ async function getAllGithubUserOrgs(githubToken) {
   let result = await request(options, function(error, response, body) {
     if (error) throw new Error(error);
   });
+  const orgs = await JSON.parse(result);
 
-  return JSON.parse(result);
-}
-
-function getRedisData(orgs) {
-  return Promise.all(
+  // Match that data with what we have stored in the database
+  return await Promise.all(
     orgs.map(async org => {
-      const data = await redisDB.hgetall("ghorg:" + org.id);
-      if (data) {
+      // Get Orgs from Database
+      const query = readFileSync(__dirname + '/getOrg.graphql', 'utf8')
+      const data = await graphqlRequest(process.env.DATABASE_API, query, {
+        id: org.id,
+      });
+      if (data.orgById) {
         org.installed = true;
         org.install_id = data.id;
       } else {
@@ -33,11 +38,6 @@ function getRedisData(orgs) {
       return org;
     })
   );
-}
-
-async function getUserOrgs(githubToken) {
-  const userOrgInfo = await getAllGithubUserOrgs(githubToken);
-  return await getRedisData(userOrgInfo);
 }
 
 module.exports = getUserOrgs;

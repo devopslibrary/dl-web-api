@@ -1,13 +1,15 @@
 const express = require("express");
 const jwt = require("express-jwt");
 const jwksRsa = require("jwks-rsa");
-const getGithubUserOrgs = require("./library/githubUser/getGithubUserOrgs");
-const getGithubUser = require("./library/githubUser/getGithubUser");
+const getUserOrgs = require("./library/githubUser/getUserOrgs");
+const getUser = require("./library/githubUser/getUser");
 const managementApiToken = require("./library/auth0/getManagementApiToken");
 const session = require("express-session");
 const redis = require("redis");
 let RedisStore = require("connect-redis")(session);
 let redisClient = redis.createClient();
+require('dotenv').config()
+
 
 // Create a new Express app
 const app = express();
@@ -69,9 +71,9 @@ app.listen(3001, async function() {
 app.get("/api/external", checkJwt, async (req, res) => {
   if (!req.session.orgs) {
     const userId = req.user.sub.split("|")[1];
-    const githubUser = await getGithubUser(authToken, userId);
+    const githubUser = await getUser(authToken, userId);
     const githubToken = githubUser.identities[0].access_token;
-    const orgs = await getGithubUserOrgs(githubToken);
+    const orgs = await getUserOrgs(githubToken);
     req.session.orgs = orgs;
   }
   req.log.info("Returning cached Github Orgs");

@@ -1,0 +1,11 @@
+query GetOrg (
+  $id: Int!
+) {
+  orgById(id: $id) {
+    createdAt
+    id
+    installationId
+    name
+    nodeId
+  }
+}

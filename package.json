@@ -15,11 +15,13 @@
     "backpack-core": "^0.8.4",
     "connect-redis": "^4.0.3",
     "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-jwt": "^5.3.1",
     "express-jwt-authz": "^2.3.1",
     "express-pino-logger": "^4.0.0",
     "express-session": "^1.17.0",
+    "graphql-request": "^1.8.2",
     "jwks-rsa": "^1.6.0",
     "jwt-decode": "^2.2.0",
     "pino-pretty": "^3.2.2",
@@ -38,7 +40,8 @@
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "/coverage/",
-      "backpack.config.js"
+      "backpack.config.js",
+      "/build/"
     ]
   },
   "devDependencies": {
