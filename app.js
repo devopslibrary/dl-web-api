@@ -1,15 +1,17 @@
+"use strict";
+
 const express = require("express");
 const jwt = require("express-jwt");
 const jwksRsa = require("jwks-rsa");
 const getUserOrgs = require("./library/githubUser/getUserOrgs");
 const getUser = require("./library/githubUser/getUser");
+const getRepos = require("./library/githubUser/getRepos");
 const managementApiToken = require("./library/auth0/getManagementApiToken");
 const session = require("express-session");
 const redis = require("redis");
 let RedisStore = require("connect-redis")(session);
 let redisClient = redis.createClient();
-require('dotenv').config()
-
+require("dotenv").config();
 
 // Create a new Express app
 const app = express();
@@ -67,8 +69,8 @@ app.listen(3001, async function() {
   });
 });
 
-// Define an endpoint that must be called with an access token
-app.get("/api/external", checkJwt, async (req, res) => {
+// Retrieve Org Information
+app.get("/api/get-orgs", checkJwt, async (req, res) => {
   if (!req.session.orgs) {
     const userId = req.user.sub.split("|")[1];
     const githubUser = await getUser(authToken, userId);
@@ -78,6 +80,19 @@ app.get("/api/external", checkJwt, async (req, res) => {
   }
   req.log.info("Returning cached Github Orgs");
   res.send(req.session.orgs);
+});
+
+// Receive Repo Information
+app.get("/api/get-repos", checkJwt, async (req, res) => {
+  if (!req.session.repos) {
+    const userId = req.user.sub.split("|")[1];
+    const githubUser = await getUser(authToken, userId);
+    const githubToken = githubUser.identities[0].access_token;
+    const repos = await getRepos(req.query.org, githubToken);
+    req.session.repos = repos;
+  }
+  req.log.info("Returning cached Github Repos");
+  res.send(req.session.repos);
 });
 
 process.on("SIGINT", function() {
