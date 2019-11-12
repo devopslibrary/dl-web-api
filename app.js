@@ -84,15 +84,11 @@ app.get("/api/get-orgs", checkJwt, async (req, res) => {
 
 // Receive Repo Information
 app.get("/api/get-repos", checkJwt, async (req, res) => {
-  if (!req.session.repos) {
-    const userId = req.user.sub.split("|")[1];
-    const githubUser = await getUser(authToken, userId);
-    const githubToken = githubUser.identities[0].access_token;
-    const repos = await getRepos(req.query.org, githubToken);
-    req.session.repos = repos;
-  }
-  req.log.info("Returning cached Github Repos");
-  res.send(req.session.repos);
+  const userId = req.user.sub.split("|")[1];
+  const githubUser = await getUser(authToken, userId);
+  const githubToken = githubUser.identities[0].access_token;
+  const repos = await getRepos(req.query.org, githubToken);
+  res.send(repos);
 });
 
 process.on("SIGINT", function() {
