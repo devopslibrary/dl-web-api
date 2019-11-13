@@ -24,6 +24,7 @@
     "graphql-request": "^1.8.2",
     "jwks-rsa": "^1.6.0",
     "jwt-decode": "^2.2.0",
+    "nock": "^11.7.0",
     "pino-pretty": "^3.2.2",
     "prettier": "^1.18.2",
     "redis": "^2.8.0",
