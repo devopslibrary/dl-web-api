@@ -1,7 +1,7 @@
 const request = require("request-promise");
-const graphqlRequest = require('graphql-request').request
-const {readFileSync} = require('fs')
-require('dotenv').config()
+const graphqlRequest = require("graphql-request").request;
+const { readFileSync } = require("fs");
+require("dotenv").config();
 
 // Returns all orgs that a user belongs to (provided they allow us to get that info!)
 async function getUserOrgs(githubToken) {
@@ -24,9 +24,9 @@ async function getUserOrgs(githubToken) {
   return await Promise.all(
     orgs.map(async org => {
       // Get Orgs from Database
-      const query = readFileSync(__dirname + '/getOrg.graphql', 'utf8')
+      const query = readFileSync(__dirname + "/getOrg.graphql", "utf8");
       const data = await graphqlRequest(process.env.DATABASE_API, query, {
-        id: org.id,
+        id: org.id
       });
       if (data.orgById) {
         org.installed = true;
