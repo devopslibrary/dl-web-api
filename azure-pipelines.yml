@@ -1,54 +1,54 @@
 trigger:
-- master
+  - master
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: "ubuntu-latest"
 
 steps:
-- task: Bash@3
-  inputs:
-    targetType: 'inline'
-    script: 'docker run -p 6379:6379 --name redis -d redis'
-  displayName: 'Start Redis'
-- task: NodeTool@0
-  inputs:
-    versionSpec: '10.x'
-  displayName: 'Install Node.js'
+  - task: Bash@3
+    inputs:
+      targetType: "inline"
+      script: "docker run -p 6379:6379 --name redis -d redis"
+    displayName: "Start Redis"
+  - task: NodeTool@0
+    inputs:
+      versionSpec: "10.x"
+    displayName: "Install Node.js"
 
-- script: |
-    yarn install
-  displayName: 'Yarn Install'
+  - script: |
+      yarn install
+    displayName: "Yarn Install"
 
-- script: |
-    yarn test --runInBand
-  displayName: 'Jest Testing'
-  env:
-    AUTH0_CLIENT_AUDIENCE: $(AUTH0_CLIENT_AUDIENCE)
-    AUTH0_CLIENT_ID: $(AUTH0_CLIENT_ID)
-    AUTH0_CLIENT_SECRET: $(AUTH0_CLIENT_SECRET)
-- task: Bash@3
-  inputs:
-    targetType: 'inline'
-    script: 'docker stop redis'
-  displayName: 'Stop Redis'
-- task: SonarCloudPrepare@1
-  inputs:
-    SonarCloud: 'SonarCloud DevOpsLibrary'
-    organization: 'devopslibrary'
-    scannerMode: 'CLI'
-    configMode: 'manual'
-    cliProjectKey: 'dl-web-api'
-    cliProjectName: 'dl-web-api'
-    cliProjectVersion: 
-    cliSources: '.'
-    extraProperties: |
-      sonar.sources=.
-      sonar.tests=.
-      sonar.test.inclusions=src/**/*.spec.js,src/**/*.test.js
-      sonar.javascript.lcov.reportPaths=coverage/lcov.info
-      sonar.testExecutionReportPaths=coverage/clover.xml
+  - script: |
+      yarn test
+    displayName: "Jest Testing"
+    env:
+      AUTH0_CLIENT_AUDIENCE: $(AUTH0_CLIENT_AUDIENCE)
+      AUTH0_CLIENT_ID: $(AUTH0_CLIENT_ID)
+      AUTH0_CLIENT_SECRET: $(AUTH0_CLIENT_SECRET)
+  - task: Bash@3
+    inputs:
+      targetType: "inline"
+      script: "docker stop redis"
+    displayName: "Stop Redis"
+  - task: SonarCloudPrepare@1
+    inputs:
+      SonarCloud: "SonarCloud DevOpsLibrary"
+      organization: "devopslibrary"
+      scannerMode: "CLI"
+      configMode: "manual"
+      cliProjectKey: "dl-web-api"
+      cliProjectName: "dl-web-api"
+      cliProjectVersion:
+      cliSources: "."
+      extraProperties: |
+        sonar.sources=.
+        sonar.tests=.
+        sonar.test.inclusions=src/**/*.spec.js,src/**/*.test.js
+        sonar.javascript.lcov.reportPaths=coverage/lcov.info
+        sonar.testExecutionReportPaths=coverage/clover.xml
 
-- task: SonarCloudPublish@1
-  inputs:
-    pollingTimeoutSec: '300'
-- task: SonarCloudAnalyze@1
+  - task: SonarCloudPublish@1
+    inputs:
+      pollingTimeoutSec: "300"
+  - task: SonarCloudAnalyze@1
