@@ -38,6 +38,7 @@
       "**/*.js"
     ],
     "testEnvironment": "node",
+    "testResultsProcessor": "jest-sonar-reporter",
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "/coverage/",
@@ -49,6 +50,7 @@
     "eslint": "^6.6.0",
     "eslint-config-prettier": "^6.5.0",
     "jest": "^24.9.0",
+    "jest-sonar-reporter": "^2.0.0",
     "supertest": "^4.0.2"
   }
 }
