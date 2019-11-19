@@ -11,6 +11,8 @@
   "author": "DevOps Library",
   "license": "ISC",
   "dependencies": {
+    "@hapi/joi": "^16.1.7",
+    "@types/jest": "^24.0.23",
     "async-redis": "^1.1.7",
     "backpack-core": "^0.8.4",
     "connect-redis": "^4.0.3",
@@ -35,22 +37,36 @@
   "jest": {
     "collectCoverage": true,
     "collectCoverageFrom": [
-      "**/*.js"
+      "**/*.js",
+      "**/*.ts"
     ],
-    "testEnvironment": "node",
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
     "testResultsProcessor": "jest-sonar-reporter",
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "/coverage/",
       "backpack.config.js",
       "/build/"
-    ]
+    ],
+    "rootDir": "src",
+    "testRegex": ".spec.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "coverageDirectory": "./coverage",
+    "testEnvironment": "node"
   },
   "devDependencies": {
     "eslint": "^6.6.0",
     "eslint-config-prettier": "^6.5.0",
     "jest": "^24.9.0",
     "jest-sonar-reporter": "^2.0.0",
-    "supertest": "^4.0.2"
+    "supertest": "^4.0.2",
+    "ts-jest": "^24.1.0",
+    "typescript": "^3.7.2"
   }
 }
