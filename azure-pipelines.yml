@@ -49,7 +49,7 @@ steps:
       extraProperties: |
         sonar.sources=.
         sonar.tests=.
-        sonar.test.inclusions=**/*.spec.js,**/*.test.js
+        sonar.test.inclusions=**/*.spec.ts,**/*.test.ts
         sonar.javascript.lcov.reportPaths=coverage/lcov.info
         sonar.testExecutionReportPaths=test-report.xml
 
