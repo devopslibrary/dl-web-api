@@ -14,14 +14,16 @@ steps:
     inputs:
       versionSpec: "10.x"
     displayName: "Install Node.js"
-
+  - task: DownloadSecureFile@1
+    name: envFile
+    inputs:
+      secureFile: 'development.env'
+  - script: |
+      mv $(envFile.secureFilePath) development.env
+    displayName: Create development.env
   - script: |
       yarn install
     displayName: "Yarn Install"
-  - task: DownloadSecureFile@1
-    inputs:
-      secureFile: 'development.env'
-
   - script: |
       yarn test
     displayName: "Jest Testing"
