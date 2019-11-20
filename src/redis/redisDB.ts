@@ -1,7 +1,8 @@
-const asyncRedis = require("async-redis");
+import asyncRedis = require('async-redis');
+
 const client = asyncRedis.createClient({
   port: 6379,
-  host: "localhost"
+  host: 'localhost',
 });
 
 module.exports = client;

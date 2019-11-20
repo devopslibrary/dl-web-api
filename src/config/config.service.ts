@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv';
-const Joi = require('@hapi/joi');
+import Joi = require('@hapi/joi');
 import * as fs from 'fs';
 
 export type EnvConfig = Record<string, string>;
