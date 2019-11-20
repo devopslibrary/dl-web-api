@@ -18,6 +18,9 @@ steps:
   - script: |
       yarn install
     displayName: "Yarn Install"
+  - task: DownloadSecureFile@1
+    inputs:
+      secureFile: 'development.env'
 
   - script: |
       yarn test
