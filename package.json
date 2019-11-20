@@ -4,7 +4,7 @@
   "description": "Backend for Kondo app",
   "main": "app.js",
   "scripts": {
-    "serve": "yarn install && ts-node app.ts | pino-pretty -i req,res,module",
+    "serve": "ts-node app.ts | pino-pretty -i req,res,module",
     "pretest": "eslint --ignore-path .gitignore **/*.ts --fix",
     "test": "jest"
   },
