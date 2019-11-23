@@ -38,15 +38,23 @@
     "request-promise": "^4.2.4"
   },
   "jest": {
+    "testPathIgnorePatterns": [
+      "/lib/",
+      "/node_modules/"
+    ],
     "collectCoverage": true,
+    "preset": "ts-jest",
     "collectCoverageFrom": [
       "**/*.js",
       "**/*.ts"
     ],
     "moduleFileExtensions": [
+      "ts",
+      "tsx",
       "js",
+      "jsx",
       "json",
-      "ts"
+      "node"
     ],
     "testResultsProcessor": "jest-sonar-reporter",
     "coveragePathIgnorePatterns": [
@@ -55,8 +63,7 @@
       "backpack.config.js",
       "/build/"
     ],
-    "rootDir": "src",
-    "testRegex": ".spec.ts$",
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
@@ -75,7 +82,7 @@
     "jest": "^24.9.0",
     "jest-sonar-reporter": "^2.0.0",
     "supertest": "^4.0.2",
-    "ts-jest": "^24.1.0",
+    "ts-jest": "^24.2.0",
     "ts-node": "^8.5.2",
     "ts-node-dev": "^1.0.0-pre.44",
     "typescript": "^3.7.2"
