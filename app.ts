@@ -1,20 +1,26 @@
 import express = require('express');
 import { getOrgs } from './src/github/getOrgs';
-import { getUser } from './src/github/getUser';
 import { getRepos } from './src/github/getRepos';
 import { getAllBranches } from './src/github/getAllBranches';
-import { getManagementApiToken } from './src/auth0/getManagementApiToken';
 import * as session from 'express-session';
-
+import jwt = require('express-jwt');
+import jwksRsa = require('jwks-rsa');
 import redis = require('redis');
 import dotenv = require('dotenv');
 import * as connectRedis from 'connect-redis';
+import { ConfigService } from './src/config/config.service';
+import { getToken } from './src/github/getToken';
 const RedisStore = connectRedis(session);
 const redisClient = redis.createClient();
 dotenv.config();
 
 // Create a new Express app
 const app: express.Application = express();
+
+// Config
+const config: ConfigService = new ConfigService(
+  `${process.env.NODE_ENV || 'development'}.env`,
+);
 
 // Logging
 import pino = require('pino');
@@ -23,16 +29,7 @@ const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
 const expressLogger = expressPino({ logger });
 app.use(expressLogger);
 
-// Define middleware that validates incoming bearer tokens
-import jwt = require('express-jwt');
-import jwksRsa = require('jwks-rsa');
-import { ConfigService } from './src/config/config.service';
-
-// Set up Auth0 configuration
-const config: ConfigService = new ConfigService(
-  `${process.env.NODE_ENV || 'development'}.env`,
-);
-
+// Global Middleware
 const checkJwt = jwt({
   secret: jwksRsa.expressJwtSecret({
     cache: true,
@@ -45,6 +42,7 @@ const checkJwt = jwt({
   issuer: `https://${config.get('AUTH0_DOMAIN')}/`,
   algorithm: ['RS256'],
 });
+app.use(checkJwt);
 
 // Use session https://github.com/expressjs/session
 const sess = {
@@ -61,23 +59,19 @@ if (app.get('env') === 'production') {
 app.use(session(sess));
 // End session code
 
-// Get management token from Auth0
-let authToken;
+// Start Express
 app.use(express.json());
 app.listen(3000, async () => {
   logger.info('App is ready');
-  await getManagementApiToken().then(token => {
-    authToken = token;
-  });
 });
 
+// Token Middleware for Github Token Retrieval
+app.use(getToken);
+
 // Retrieve Org Information
-app.get('/orgs', checkJwt, async (req: any, res) => {
+app.get('/orgs', async (req: any, res) => {
   if (!req.session.orgs) {
-    const userId = req.user.sub.split('|')[1];
-    const githubUser = await getUser(authToken, userId);
-    const githubToken = githubUser.token;
-    const orgs = await getOrgs(githubToken);
+    const orgs = await getOrgs(req.session.token);
     req.session.orgs = orgs;
   }
   req.log.info('Returning cached Github Orgs');
@@ -85,16 +79,13 @@ app.get('/orgs', checkJwt, async (req: any, res) => {
 });
 
 // Receive Repo Information
-app.get('/orgs/:org/repos', checkJwt, async (req: any, res) => {
-  const userId = req.user.sub.split('|')[1];
-  const githubUser = await getUser(authToken, userId);
-  const githubToken = githubUser.token;
-  const repos = await getRepos(req.params.org, githubToken);
+app.get('/orgs/:org/repos', async (req: any, res) => {
+  const repos = await getRepos(req.params.org, req.session.token);
   res.send(repos);
 });
 
 // Receive Branch Information
-app.get('/orgs/:org/branches', checkJwt, async (req: any, res) => {
+app.get('/orgs/:org/branches', async (req: any, res) => {
   const branches = await getAllBranches(req.params.org);
   res.send(branches);
 });

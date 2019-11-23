@@ -1,5 +1,5 @@
-query GetOrgBranches($id: Int!) {
-  orgById(id: $id) {
+query GetOrgBranches($name: String!) {
+  orgByName(name: $name) {
     reposByOrgId {
       nodes {
         branchesByRepoId {
