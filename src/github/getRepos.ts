@@ -1,3 +1,4 @@
+import { RepoModel } from './models/repo';
 import request = require('request-promise');
 import dotenv = require('dotenv');
 dotenv.config();
@@ -19,7 +20,12 @@ export async function getRepos(orgName, githubToken) {
       throw new Error(error);
     }
   });
-  const repos = await JSON.parse(result);
-
+  const reposJson = await JSON.parse(result);
+  const repos: RepoModel[] = [];
+  reposJson.forEach(repo =>
+    repos.push(
+      new RepoModel(repo.name, repo.id, repo.owner.id, repo.default_branch),
+    ),
+  );
   return repos;
 }

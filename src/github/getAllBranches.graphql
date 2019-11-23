@@ -1,0 +1,22 @@
+query GetOrgBranches($id: Int!) {
+  orgById(id: $id) {
+    reposByOrgId {
+      nodes {
+        branchesByRepoId {
+          edges {
+            node {
+              id
+              lastCommitDate
+              name
+              repoId
+              protected
+              nodeId
+              lastSynced
+            }
+          }
+          totalCount
+        }
+      }
+    }
+  }
+}

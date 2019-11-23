@@ -4,7 +4,7 @@
   "description": "Backend for Kondo app",
   "main": "app.js",
   "scripts": {
-    "serve": "ts-node app.ts | pino-pretty -i req,res,module",
+    "serve": "ts-node-dev --respawn --transpileOnly app.ts | pino-pretty -i req,res,module",
     "pretest": "eslint --ignore-path .gitignore **/*.ts --fix",
     "test": "jest"
   },
@@ -29,6 +29,7 @@
     "jwks-rsa": "^1.6.0",
     "jwt-decode": "^2.2.0",
     "nock": "^11.7.0",
+    "pg-promise": "^10.2.1",
     "pino-pretty": "^3.2.2",
     "prettier": "^1.18.2",
     "redis": "^2.8.0",
@@ -76,6 +77,7 @@
     "supertest": "^4.0.2",
     "ts-jest": "^24.1.0",
     "ts-node": "^8.5.2",
+    "ts-node-dev": "^1.0.0-pre.44",
     "typescript": "^3.7.2"
   }
 }

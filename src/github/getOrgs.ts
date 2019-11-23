@@ -2,10 +2,12 @@ import request = require('request-promise');
 import * as graphqlRequest from 'graphql-request';
 import { readFileSync } from 'fs';
 import dotenv = require('dotenv');
+import { OrgModel } from './models/org';
+import e = require('express');
 dotenv.config();
 
 // Returns all orgs that a user belongs to (provided they allow us to get that info!)
-export async function getUserOrgs(githubToken) {
+export async function getOrgs(githubToken): Promise<OrgModel[]> {
   // Retrieve Orgs from Github
   const options = {
     method: 'GET',
@@ -37,12 +39,19 @@ export async function getUserOrgs(githubToken) {
       );
       if (data.orgById) {
         org.installed = true;
-        org.install_id = data.id;
+        org.installationId = data.orgById;
       } else {
         org.installed = false;
-        org.install_id = null;
+        org.installationId = null;
       }
-      return org;
+      return new OrgModel(
+        org.login,
+        org.id,
+        org.installed,
+        org.installationId,
+        org.node_id,
+        org.avatar_url,
+      );
     }),
   );
 }

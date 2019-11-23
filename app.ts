@@ -1,7 +1,8 @@
 import express = require('express');
-import { getUserOrgs } from './src/github/getUserOrgs';
+import { getOrgs } from './src/github/getOrgs';
 import { getUser } from './src/github/getUser';
 import { getRepos } from './src/github/getRepos';
+import { getAllBranches } from './src/github/getAllBranches';
 import { getManagementApiToken } from './src/auth0/getManagementApiToken';
 import * as session from 'express-session';
 
@@ -75,8 +76,8 @@ app.get('/orgs', checkJwt, async (req: any, res) => {
   if (!req.session.orgs) {
     const userId = req.user.sub.split('|')[1];
     const githubUser = await getUser(authToken, userId);
-    const githubToken = githubUser.identities[0].access_token;
-    const orgs = await getUserOrgs(githubToken);
+    const githubToken = githubUser.token;
+    const orgs = await getOrgs(githubToken);
     req.session.orgs = orgs;
   }
   req.log.info('Returning cached Github Orgs');
@@ -84,14 +85,23 @@ app.get('/orgs', checkJwt, async (req: any, res) => {
 });
 
 // Receive Repo Information
-app.get('/orgs/repos', checkJwt, async (req: any, res) => {
+app.get('/orgs/:org/repos', checkJwt, async (req: any, res) => {
   const userId = req.user.sub.split('|')[1];
   const githubUser = await getUser(authToken, userId);
-  const githubToken = githubUser.identities[0].access_token;
-  const repos = await getRepos(req.query.org, githubToken);
+  const githubToken = githubUser.token;
+  const repos = await getRepos(req.params.org, githubToken);
   res.send(repos);
 });
 
+// Receive Branch Information
+app.get('/orgs/:org/branches', checkJwt, async (req: any, res) => {
+  const branches = await getAllBranches(req.params.org);
+  res.send(branches);
+});
+
 process.on('SIGINT', function() {
+  console.log('\nGracefully shutting down from SIGINT (Ctrl-C)');
   redisClient.quit();
+  // some other closing procedures go here
+  process.exit(1);
 });
