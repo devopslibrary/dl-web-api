@@ -7,4 +7,5 @@ test('Given an org, should return array of branches', async () => {
   expect(branches[0].isProtected).toBeDefined();
   expect(branches[0].lastCommitDate).toBeDefined();
   expect(branches[0].name).toBeDefined();
+  expect(branches[0].stale).toBeDefined();
 });
