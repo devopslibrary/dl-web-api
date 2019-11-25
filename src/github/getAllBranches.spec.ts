@@ -1,6 +1,5 @@
 import { getAllBranches } from './getAllBranches';
 import { BranchModel } from './models/branch';
-// import { apiQuery } from '../infra/apiHelper/index';
 
 // Grab non-stale date
 const today = new Date();

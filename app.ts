@@ -1,7 +1,4 @@
 import express = require('express');
-import { getOrgs } from './src/github/getOrgs';
-import { getRepos } from './src/github/getRepos';
-import { getAllBranches } from './src/github/getAllBranches';
 import * as session from 'express-session';
 import jwt = require('express-jwt');
 import jwksRsa = require('jwks-rsa');
@@ -12,11 +9,18 @@ import { ConfigService } from './src/config/config.service';
 import { getToken } from './src/github/getToken';
 const RedisStore = connectRedis(session);
 const redisClient = redis.createClient();
-import { apiQuery } from './src/infra/apiHelper/index';
 dotenv.config();
+import 'reflect-metadata';
+import { InversifyExpressServer } from 'inversify-express-utils';
+
+// Inversion of Control Container
+// the @provide() annotation will then automatically register them.
+import './src/ioc/loader';
+import { Container } from 'inversify';
+const container = new Container();
 
 // Create a new Express app
-const app: express.Application = express();
+const server = new InversifyExpressServer(container);
 
 // Config
 const config: ConfigService = new ConfigService(
@@ -28,7 +32,6 @@ import pino = require('pino');
 import expressPino = require('express-pino-logger');
 const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
 const expressLogger = expressPino({ logger });
-app.use(expressLogger);
 
 // Global Middleware
 const checkJwt = jwt({
@@ -43,7 +46,6 @@ const checkJwt = jwt({
   issuer: `https://${config.get('AUTH0_DOMAIN')}/`,
   algorithm: ['RS256'],
 });
-app.use(checkJwt);
 
 // Use session https://github.com/expressjs/session
 const sess = {
@@ -53,47 +55,32 @@ const sess = {
   resave: false,
   saveUninitialized: false,
 };
-if (app.get('env') === 'production') {
-  app.set('trust proxy', 1); // trust first proxy
-  // sess.cookie.secure = true; // serve secure cookies
-}
-app.use(session(sess));
-// End session code
 
-// Start Express
-app.use(express.json());
-app.listen(3000, async () => {
-  logger.info('App is ready');
-});
+// Server Config
+server.setConfig(app => {
+  app.use(expressLogger); // Logger
+  app.use(checkJwt); // JWT Middleware
+  app.use(express.json()); // Automatic JSON parsing middleware
 
-// Token Middleware for Github Token Retrieval
-app.use(getToken);
-
-// Retrieve Org Information
-app.get('/orgs', async (req: any, res) => {
-  if (!req.session.orgs) {
-    const orgs = await getOrgs(apiQuery, req.session.token);
-    req.session.orgs = orgs;
+  // Session code
+  if (app.get('env') === 'production') {
+    app.set('trust proxy', 1); // trust first proxy
   }
-  req.log.info('Returning cached Github Orgs');
-  res.send(req.session.orgs);
+  app.use(session(sess));
+  // End session code
+
+  app.use(getToken); // Github Token Middleware, MUST be after Session code!
 });
 
-// Receive Repo Information
-app.get('/orgs/:org/repos', async (req: any, res) => {
-  const repos = await getRepos(req.params.org, req.session.token);
-  res.send(repos);
-});
+// Start Server
+const app = server.build();
+app.listen(3000);
+console.log('Server started on port 3000 :)');
+exports = module.exports = app;
 
-// Receive Branch Information
-app.get('/orgs/:org/branches', async (req: any, res) => {
-  const branches = await getAllBranches(apiQuery, req.params.org);
-  res.send(branches);
-});
-
+// Close Redis on Death
 process.on('SIGINT', function() {
   console.log('\nGracefully shutting down from SIGINT (Ctrl-C)');
   redisClient.quit();
-  // some other closing procedures go here
   process.exit(1);
 });
