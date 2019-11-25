@@ -1,15 +1,15 @@
-import * as graphqlRequest from 'graphql-request';
-import { readFileSync } from 'fs';
 import { BranchModel } from './models/branch';
 import dotenv = require('dotenv');
 import moment = require('moment');
 dotenv.config();
 
 // Returns all branches of a given repository
-export async function getAllBranches(orgName): Promise<BranchModel[]> {
+export async function getAllBranches(
+  apiQuery,
+  orgName,
+): Promise<BranchModel[]> {
   // Does user have permission to view org?
-  const query = readFileSync(__dirname + '/getAllBranches.graphql', 'utf8');
-  const data = await graphqlRequest.request(process.env.DATABASE_API, query, {
+  const data: any = await apiQuery(__dirname + '/' + 'getAllBranches.graphql', {
     name: orgName,
   });
   const branches: BranchModel[] = [];
