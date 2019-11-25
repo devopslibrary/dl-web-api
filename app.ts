@@ -12,6 +12,7 @@ import { ConfigService } from './src/config/config.service';
 import { getToken } from './src/github/getToken';
 const RedisStore = connectRedis(session);
 const redisClient = redis.createClient();
+import { apiQuery } from './src/infra/apiHelper/index';
 dotenv.config();
 
 // Create a new Express app
@@ -71,7 +72,7 @@ app.use(getToken);
 // Retrieve Org Information
 app.get('/orgs', async (req: any, res) => {
   if (!req.session.orgs) {
-    const orgs = await getOrgs(req.session.token);
+    const orgs = await getOrgs(apiQuery, req.session.token);
     req.session.orgs = orgs;
   }
   req.log.info('Returning cached Github Orgs');
@@ -86,7 +87,7 @@ app.get('/orgs/:org/repos', async (req: any, res) => {
 
 // Receive Branch Information
 app.get('/orgs/:org/branches', async (req: any, res) => {
-  const branches = await getAllBranches(req.params.org);
+  const branches = await getAllBranches(apiQuery, req.params.org);
   res.send(branches);
 });
 

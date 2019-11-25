@@ -3,7 +3,6 @@ import { getManagementApiToken } from '../auth0/getManagementApiToken';
 import { UserModel } from './models/user';
 import { OrgModel } from './models/org';
 import { getOrgs } from './getOrgs';
-// import { apiQuery } from '../infra/apiHelper/index';
 
 // Mock the Query
 const apiQuery = async function(filename, args) {
