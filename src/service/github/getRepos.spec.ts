@@ -1,6 +1,6 @@
 import { getRepos } from './getRepos';
 import { getUser } from './getUser';
-import { getManagementApiToken } from '../auth0/getManagementApiToken';
+import { getManagementApiToken } from '../../infra/auth0/getManagementApiToken';
 
 test('Given an organization, should return repositories', async () => {
   const authToken = await getManagementApiToken();

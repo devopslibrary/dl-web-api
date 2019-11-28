@@ -1,19 +1,26 @@
-import { apiQuery } from '../infra/apiHelper/index';
-import { getOrgs } from '../github/getOrgs';
-import { getRepos } from '../github/getRepos';
-import { getAllBranches } from '../github/getAllBranches';
+import { inject } from 'inversify';
+import { getRepos } from '../service/github/getRepos';
+import { getOrgs } from '../service/github/getOrgs';
+import { getAllBranches } from '../service/github/getAllBranches';
 import { controller, httpGet } from 'inversify-express-utils';
 import { Request } from 'express';
+import TYPES from '../constant/types';
+import { KondoAPIService } from '../service/kondoAPIService/index';
 
 @controller('/orgs')
 export class OrgController {
-  // constructor(@inject(TYPES.UserService) private userService: UserService) {}
+  constructor(
+    @inject(TYPES.KondoAPIService) private kondoAPIService: KondoAPIService,
+  ) {}
 
   // Retrieve all Organizations
   @httpGet('/')
   public async getAllOrganizations(request: Request) {
     if (!request.session.orgs) {
-      const orgs = await getOrgs(apiQuery, request.session.token);
+      const orgs = await getOrgs(
+        this.kondoAPIService.graphqlQuery,
+        request.session.token,
+      );
       request.session.orgs = orgs;
     }
     return request.session.orgs;
@@ -28,6 +35,9 @@ export class OrgController {
   // Retrieve all Branches for an Org
   @httpGet('/:org/branches')
   public getAllBranches(request: Request) {
-    return getAllBranches(apiQuery, request.params.org);
+    return getAllBranches(
+      this.kondoAPIService.graphqlQuery,
+      request.params.org,
+    );
   }
 }

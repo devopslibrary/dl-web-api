@@ -1,6 +1,6 @@
 import { getUser } from './getUser';
-import { getManagementApiToken } from '../auth0/getManagementApiToken';
-import { UserModel } from './models/user';
+import { getManagementApiToken } from '../../infra/auth0/getManagementApiToken';
+import { UserModel } from '../../models/user';
 import errors = require('request-promise/errors');
 
 test('Given a real ID, should return a proper Github User', async () => {

@@ -1,4 +1,4 @@
-import { BranchModel } from './models/branch';
+import { BranchModel } from '../../models/branch';
 import dotenv = require('dotenv');
 import moment = require('moment');
 dotenv.config();

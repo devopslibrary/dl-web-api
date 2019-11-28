@@ -4,7 +4,7 @@
   "description": "Backend for Kondo app",
   "main": "app.js",
   "scripts": {
-    "serve": "ts-node-dev --respawn --transpileOnly app.ts | pino-pretty -i req,res,module",
+    "serve": "ts-node-dev --respawn --transpileOnly src/app.ts | pino-pretty -i req,res,module",
     "pretest": "eslint --ignore-path .gitignore **/*.ts --fix",
     "test": "jest"
   },
@@ -15,9 +15,7 @@
     "@types/express": "^4.17.2",
     "@types/express-session": "^1.15.16",
     "@types/jest": "^24.0.23",
-    "async-redis": "^1.1.7",
     "connect-redis": "^4.0.3",
-    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "eslint-plugin-import": "^2.18.2",
     "express": "^4.17.1",
@@ -27,6 +25,7 @@
     "express-session": "^1.17.0",
     "graphql-request": "^1.8.2",
     "inversify": "^5.0.1",
+    "inversify-binding-decorators": "^4.0.0",
     "inversify-express-utils": "^6.3.2",
     "jwks-rsa": "^1.6.0",
     "jwt-decode": "^2.2.0",
@@ -36,7 +35,6 @@
     "pino-pretty": "^3.2.2",
     "prettier": "^1.18.2",
     "redis": "^2.8.0",
-    "redis-rejson": "^1.0.0",
     "reflect-metadata": "^0.1.13",
     "request": "^2.88.0",
     "request-promise": "^4.2.4"

@@ -1,6 +1,6 @@
 import request = require('request-promise');
 import dotenv = require('dotenv');
-import { OrgModel } from './models/org';
+import { OrgModel } from '../../models/org';
 dotenv.config();
 
 // Returns all orgs that a user belongs to (provided they allow us to get that info!)

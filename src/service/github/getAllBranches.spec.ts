@@ -1,5 +1,5 @@
 import { getAllBranches } from './getAllBranches';
-import { BranchModel } from './models/branch';
+import { BranchModel } from '../../models/branch';
 
 // Grab non-stale date
 const today = new Date();

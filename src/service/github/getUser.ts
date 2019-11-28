@@ -1,5 +1,5 @@
 import request = require('request-promise');
-import { UserModel } from './models/user';
+import { UserModel } from '../../models/user';
 
 // Returns a Github User (including the access_token!)
 export async function getUser(authToken, userId): Promise<UserModel> {

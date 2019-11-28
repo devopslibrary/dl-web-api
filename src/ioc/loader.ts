@@ -3,4 +3,5 @@
 // import '../utils/mongodb/client';
 // import '../controller/user';
 // import '../service/user';
+import '../service/kondoAPIService';
 import '../controller/org';

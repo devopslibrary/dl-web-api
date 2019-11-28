@@ -1,4 +1,4 @@
-import { RepoModel } from './models/repo';
+import { RepoModel } from '../../models/repo';
 import request = require('request-promise');
 import dotenv = require('dotenv');
 dotenv.config();

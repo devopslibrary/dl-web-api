@@ -1,7 +1,7 @@
 import { getUser } from './getUser';
-import { getManagementApiToken } from '../auth0/getManagementApiToken';
-import { UserModel } from './models/user';
-import { OrgModel } from './models/org';
+import { getManagementApiToken } from '../../infra/auth0/getManagementApiToken';
+import { UserModel } from '../../models/user';
+import { OrgModel } from '../../models/org';
 import { getOrgs } from './getOrgs';
 
 // Mock the Query

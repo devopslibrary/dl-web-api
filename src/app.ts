@@ -5,19 +5,22 @@ import jwksRsa = require('jwks-rsa');
 import redis = require('redis');
 import dotenv = require('dotenv');
 import * as connectRedis from 'connect-redis';
-import { ConfigService } from './src/config/config.service';
-import { getToken } from './src/github/getToken';
+import { ConfigService } from './infra/config/config.service';
+import { getToken } from './service/github/getToken';
 const RedisStore = connectRedis(session);
 const redisClient = redis.createClient();
 dotenv.config();
 import 'reflect-metadata';
 import { InversifyExpressServer } from 'inversify-express-utils';
+import TYPES from './constant/types';
 
 // Inversion of Control Container
 // the @provide() annotation will then automatically register them.
-import './src/ioc/loader';
+import './ioc/loader';
 import { Container } from 'inversify';
+import { KondoAPIService } from './service/kondoAPIService/index';
 const container = new Container();
+container.bind<KondoAPIService>(TYPES.KondoAPIService).to(KondoAPIService);
 
 // Create a new Express app
 const server = new InversifyExpressServer(container);
