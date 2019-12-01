@@ -10,17 +10,16 @@ import { getToken } from './service/github/getToken';
 const RedisStore = connectRedis(session);
 const redisClient = redis.createClient();
 dotenv.config();
+import { buildProviderModule } from 'inversify-binding-decorators';
 import 'reflect-metadata';
 import { InversifyExpressServer } from 'inversify-express-utils';
-import TYPES from './constant/types';
+import './controller/org';
 
 // Inversion of Control Container
 // the @provide() annotation will then automatically register them.
-import './ioc/loader';
 import { Container } from 'inversify';
-import { KondoAPIService } from './service/kondoAPIService/index';
 const container = new Container();
-container.bind<KondoAPIService>(TYPES.KondoAPIService).to(KondoAPIService);
+container.load(buildProviderModule());
 
 // Create a new Express app
 const server = new InversifyExpressServer(container);
