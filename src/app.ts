@@ -5,7 +5,7 @@ import jwksRsa = require('jwks-rsa');
 import redis = require('redis');
 import dotenv = require('dotenv');
 import * as connectRedis from 'connect-redis';
-import { ConfigService } from './infra/config/config.service';
+import { ConfigService } from './service/config/config.service';
 import { getToken } from './service/github/getToken';
 const RedisStore = connectRedis(session);
 const redisClient = redis.createClient();

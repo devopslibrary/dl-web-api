@@ -26,6 +26,10 @@ export class ConfigService {
       AUTH0_CLIENT_SECRET: Joi.string().required(),
       AUTH0_AUDIENCE: Joi.string().required(),
       AUTH0_DOMAIN: Joi.string().required(),
+      DATABASE_HOST: Joi.string().required(),
+      DATABASE_NAME: Joi.string().required(),
+      DATABASE_USER: Joi.string().required(),
+      DATABASE_PASSWORD: Joi.string().required(),
     });
 
     const { error, value: validatedEnvConfig } = envVarsSchema.validate(

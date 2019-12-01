@@ -11,7 +11,7 @@ export async function getUser(authToken, userId): Promise<UserModel> {
       'authorization': 'Bearer ' + authToken,
     },
   };
-  const result = await request(options, (error, response, body) => {
+  const result = await request(options, error => {
     if (error) {
       throw new Error(error);
     }

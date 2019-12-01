@@ -1,5 +1,5 @@
 import { getUser } from './getUser';
-import { getManagementApiToken } from '../../infra/auth0/getManagementApiToken';
+import { getManagementApiToken } from '../auth0/getManagementApiToken';
 
 export async function getToken(req, res, next) {
   if (!req.session.token) {
