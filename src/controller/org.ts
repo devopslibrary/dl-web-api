@@ -4,13 +4,12 @@ import { getOrgs } from '../service/github/getOrgs';
 import { getAllBranches } from '../service/github/getAllBranches';
 import { controller, httpGet } from 'inversify-express-utils';
 import { Request } from 'express';
-import TYPES from '../constant/types';
 import { KondoAPIService } from '../service/kondoAPIService/index';
 
 @controller('/orgs')
 export class OrgController {
   constructor(
-    @inject(TYPES.KondoAPIService) private kondoAPIService: KondoAPIService,
+    @inject(KondoAPIService) private kondoAPIService: KondoAPIService,
   ) {}
 
   // Retrieve all Organizations

@@ -3,10 +3,9 @@ import { readFileSync } from 'fs';
 import dotenv = require('dotenv');
 dotenv.config();
 import { provide } from 'inversify-binding-decorators';
-import TYPES from '../../constant/types';
 
 // This is used to wrap the Kondo (Postgraphile) backend API Service
-@provide(TYPES.KondoAPIService)
+@provide(KondoAPIService)
 export class KondoAPIService {
   public async graphqlQuery(filename, args): Promise<JSON> {
     // Does user have permission to view org?
