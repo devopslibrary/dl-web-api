@@ -10,6 +10,11 @@ steps:
       targetType: 'inline'
       script: 'docker run -p 6379:6379 --name redis -d redis'
     displayName: 'Start Redis'
+  - task: Bash@3
+    inputs:
+      targetType: 'inline'
+      script: 'docker run -p 5432:5432 -e POSTGRES_PASSWORD=password -e POSTGRES_USER=admin -e POSTGRES_DB=kondo --name postgres -d postgres:12'
+    displayName: 'Start Postgres'
   - task: NodeTool@0
     inputs:
       versionSpec: '10.x'

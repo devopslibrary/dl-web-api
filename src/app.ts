@@ -30,9 +30,8 @@ const config: ConfigService = new ConfigService(
 );
 
 // Logging
-import pino = require('pino');
+import { logger } from './service/logger/logger';
 import expressPino = require('express-pino-logger');
-const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
 const expressLogger = expressPino({ logger });
 
 // Global Middleware
