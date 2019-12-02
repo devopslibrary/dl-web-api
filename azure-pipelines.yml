@@ -25,7 +25,7 @@ steps:
       yarn install
     displayName: 'Yarn Install'
   - script: |
-      yarn test
+      yarn test --testPathIgnorePatterns database
     displayName: 'Jest Testing'
     env:
       AUTH0_CLIENT_AUDIENCE: $(AUTH0_CLIENT_AUDIENCE)
