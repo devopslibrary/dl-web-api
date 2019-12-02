@@ -2,9 +2,6 @@ import 'reflect-metadata';
 import { OrgModel } from '../../models/org';
 import { OrgSettings } from './orgSettings';
 import { Setting } from './settingEnum';
-import { Database } from '../database/database';
-import { ConfigService } from '../config/config.service';
-const path = require('path');
 
 // ---------------------------
 // Test retrieving settings

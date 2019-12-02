@@ -1,7 +1,10 @@
+import 'reflect-metadata';
 import { ConfigService } from './config.service';
+const path = require('path');
 
-describe('Config', () => {
-  it('should be defined', () => {
-    expect(new ConfigService('development.env')).toBeDefined();
-  });
+test('The settings service should return settings successfully', async () => {
+  const config = new ConfigService(
+    path.join(__dirname, '../../tests/fixtures/env.test'),
+  );
+  expect(config.get('DATABASE_NAME')).toBe('kondo');
 });
