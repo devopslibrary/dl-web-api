@@ -29,7 +29,7 @@
     "inversify-express-utils": "^6.3.2",
     "jwks-rsa": "^1.6.0",
     "jwt-decode": "^2.2.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "nock": "^11.7.0",
     "pg-promise": "^10.2.1",
     "pino-pretty": "^3.2.2",
